@@ -48,7 +48,7 @@ public class ThreadManager extends Thread {
         this.IMAGES = new SynchronizedObservableQueue();
         this.CHECKED_URLS = new ConcurrentHashMap();
         this.THREADS = new ArrayList<>();
-        this.maxThreads = 2;
+        this.maxThreads = 1;
         this.maxLevel = 2;
         this.LINKS.add(startUrl);
     }
@@ -65,11 +65,11 @@ public class ThreadManager extends Thread {
             t.setStayOnDomain(stayOnDomain);
             t.setDaemon(true);
             t.start();
-            try {
-                t.wait(10000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ThreadManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                t.wait(10000);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(ThreadManager.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
     }
 

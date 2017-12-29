@@ -17,7 +17,6 @@
 package images;
 
 import static global.Settings.HTTP_TIMEOUT;
-import static global.Settings.TEST_URL;
 import static global.Settings.USER_AGENT;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -26,6 +25,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.MimetypesFileTypeMap;
+import static global.Settings.TEST_URL1;
 
 /**
  *
