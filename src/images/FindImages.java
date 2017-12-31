@@ -1,6 +1,8 @@
 package images;
 
+import global.Settings;
 import static global.Settings.USER_AGENT;
+import global.SynchronizedObservableQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FindImages extends Thread {
 
@@ -47,7 +50,7 @@ public class FindImages extends Thread {
     }
 
     public void find() throws InterruptedException, MalformedURLException {
-        do {
+        while (!links.isEmpty() && !pleaseDie) {
             Url u = links.poll();
             if (u == null) {
                 return;
@@ -62,7 +65,7 @@ public class FindImages extends Thread {
                 }
             }
             checkedUrls.put(u, u);
-        } while (!links.isEmpty() && !pleaseDie);
+        }
     }
 
     private List<Url> getImageLinks(Url webSiteURL) {
@@ -76,6 +79,9 @@ public class FindImages extends Thread {
             for (Element el : img) {
                 //for each element get the srs url
                 String src = el.absUrl("src");
+                if (src.isEmpty()) {
+                    continue;
+                }
                 String hostUrl = new URL(webSiteURL.url).getHost();
                 String imgUrl = new URL(src).getHost();
                 if ((stayOnDomain && hostUrl.equals(imgUrl)) || !stayOnDomain) {
@@ -101,6 +107,9 @@ public class FindImages extends Thread {
             for (Element el : a) {
                 //for each element get the srs url
                 String href = el.absUrl("href");
+                if (href.isEmpty()) {
+                    continue;
+                }
                 String hostUrl = new URL(webSiteURL.url).getHost();
                 String hrefUrl;
                 try {
@@ -201,4 +210,14 @@ public class FindImages extends Thread {
         this.stayOnDomain = stayOnDomain;
     }
 
+    public static void main(String[] args) throws InterruptedException, MalformedURLException {
+        FindImages f = new FindImages();
+        f.links = new SynchronizedObservableQueue();
+        f.images = new SynchronizedObservableQueue();
+        f.checkedUrls = new ConcurrentHashMap<>();
+        f.links.add(new Url(Settings.TEST_URL3, 0));
+        f.maxLevel = 1;
+        f.find();
+
+    }
 }

@@ -65,11 +65,11 @@ public class ThreadManager extends Thread {
             t.setStayOnDomain(stayOnDomain);
             t.setDaemon(true);
             t.start();
-//            try {
-//                t.wait(10000);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(ThreadManager.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            try {
+                t.wait(10000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ThreadManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
